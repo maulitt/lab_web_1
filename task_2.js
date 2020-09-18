@@ -46,6 +46,19 @@ function SecondOne(stroka)
         }
     }
     console.log(result);
+    return result;
 }
 
-SecondOne('hi my name is maulitt');
+//SecondOne('hi my name is maulitt');
+const express = require('express');
+
+const app = express();
+
+app.get('/api/Bayazitova/task2', function(req, res) {
+    let ask = req.query.q;
+    let answer = SecondOne(ask);
+    //console.log(answer);
+    res.send(answer);
+});
+
+app.listen(1000);

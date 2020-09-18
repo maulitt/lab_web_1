@@ -16,7 +16,19 @@ function ThirdOne(stroka)
         result += array_of_symbols[i];
     }
     console.log(result);
-    return 0;
+    return result;
 }
 
-ThirdOne('Wie heist du?');
+//ThirdOne('Wie heist du?');
+
+const express = require('express');
+
+const app = express();
+
+app.get('/api/Bayazitova/task3', function(req, res) {
+    let ask = req.query.q;
+    let answer = ThirdOne(ask);
+    res.send(answer);
+});
+
+app.listen(1000);

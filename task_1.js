@@ -16,17 +16,30 @@ function FirstOne(stroka){
         }
     }
     let i = 0;
+    let result;
     while(i < stroka.length)
     {
         if (array_for_each_symbol[i] === 1)
         {
             console.log(stroka[i]);
+            result = stroka[i];
             break;
         }
         i++;
 
     }
-    return 0;
+    return result;
 }
 
-FirstOne('gigihadid');
+const express = require('express');
+
+const app = express();
+
+app.get('/api/Bayazitova/task1', function(req, res) {
+    let ask = req.query.q;
+    let answer = FirstOne(ask);
+    res.send(answer);
+});
+
+app.listen(1000);
+
