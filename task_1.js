@@ -31,5 +31,5 @@ function FirstOne(string){
     return result;
 }
 
-
+exports.FirstOne = FirstOne;
 
