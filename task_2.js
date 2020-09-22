@@ -1,14 +1,14 @@
-function SecondOne(stroka)
+function SecondOne(string)
 {
     // превратить в верблюжий регистр строку
     let array_of_numbers = [];
     let array_of_separators = [' ', ',', '.']
-    for(let i = 0; i < stroka.length; i++)
+    for(let i = 0; i < string.length; i++)
     {
         let mark = false;
         for(let j = 0; j < 3; j++)
         {
-            if(stroka[i] === array_of_separators[j])
+            if(string[i] === array_of_separators[j])
             {
                 mark = true;
             }
@@ -18,10 +18,10 @@ function SecondOne(stroka)
             array_of_numbers.push(i);
         }
     }
-    let result = stroka[0].toUpperCase();
+    let result = string[0].toUpperCase();
     let mark = false;
     let another_mark = false;
-    for(let i = 1; i < stroka.length; i++)
+    for(let i = 1; i < string.length; i++)
     {
         mark = false;
         for(let j = 0; j < array_of_numbers.length; j++)
@@ -33,11 +33,11 @@ function SecondOne(stroka)
         }
         if(!mark && !another_mark)
         {
-            result += stroka[i];
+            result += string[i];
         }
         else if(!mark && another_mark)
         {
-            result += stroka[i].toUpperCase();
+            result += string[i].toUpperCase();
             another_mark = false;
         }
         else if(mark)
@@ -50,15 +50,10 @@ function SecondOne(stroka)
 }
 
 //SecondOne('hi my name is maulitt');
-const express = require('express');
+//const express = require('express');
 
-const app = express();
+//const app = express();
 
-app.get('/api/Bayazitova/task2', function(req, res) {
-    let ask = req.query.q;
-    let answer = SecondOne(ask);
-    //console.log(answer);
-    res.send(answer);
-});
+exports.SecondOne = SecondOne;
 
-app.listen(1000);
+//app.listen(1000);
