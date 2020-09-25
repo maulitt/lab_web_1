@@ -44,17 +44,27 @@ app.get('/api/Bayazitova/third', function (req, res) {
 
 app.get('/api/Bayazitova/task1', check_Auth,function(req, res) {
     let ask = req.query.string;
-    res.send(func1.FirstOne(ask));
+    //res.send(func1.FirstOne(ask));
+    res.render('output.hbs', {
+        request: ask,
+        result: func1.FirstOne(ask)
+    })
 });
 
 app.get('/api/Bayazitova/task2', requests,function(req, res) {
     let ask = req.query.string;
-    res.send(func2.SecondOne(ask));
+    res.render('output.hbs', {
+        request: ask,
+        result: func2.SecondOne(ask)
+    })
 });
 
 app.get('/api/Bayazitova/task3', requests, function(req, res) {
     let ask = req.query.string;
-    res.send(func3.ThirdOne(ask));
+    res.render('output.hbs', {
+        request: ask,
+        result: func3.ThirdOne(ask)
+    })
 });
 
 app.use(function(req, res, next) {       // ошибка 404 обрабатывается по-особенному 0_о
@@ -87,7 +97,7 @@ app.use(function (err, req, res, next) {
 function check_Auth (req, res, next) {         // обработка 403 как у Спартака с логированием в консоль
     if (req.query.user === 'admin')
     {
-        console.log('Request: '+req.query.q);
+        console.log('Request: '+req.query.string);
         next();
     }
     else
@@ -101,7 +111,7 @@ function check_Auth (req, res, next) {         // обработка 403 как 
 }
 
 function requests(req, res, next) {      // мидлваре для логирования в консоль запросов
-    console.log('Your Request: '+req.query.q);
+    console.log('Your Request: '+req.query.string);
     next();
 }
 
