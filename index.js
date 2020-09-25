@@ -1,12 +1,23 @@
 
 const express = require('express');
-
+//const hbs = require('hbs');
 const app = express();
+const hbs = require('hbs');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const fs = require('fs');
-//fs.open('/home/regina/lab_web_1/logging.txt', 'w+', (err, fd) => {})
+
+
+app.set('view engine', 'hbs');
+app.set('views', 'views');
+
+app.use('/', function (req, res) {
+    res.render('mainpage.hbs', {
+        title: 'Главная страница приложения',
+        name: 'Регины'
+    })
+})
 
 
 app.get('/api/Bayazitova/task1', check_Auth,function(req, res) {
@@ -79,4 +90,4 @@ function requests(req, res, next) {      // мидлваре для логиро
 //}
 
 
-app.listen(1000, '127.0.0.1');
+app.listen(3000, '127.0.0.1');
