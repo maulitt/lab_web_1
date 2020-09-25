@@ -43,17 +43,17 @@ app.get('/api/Bayazitova/third', function (req, res) {
 })
 
 app.get('/api/Bayazitova/task1', check_Auth,function(req, res) {
-    let ask = req.query.q;
+    let ask = req.query.string;
     res.send(func1.FirstOne(ask));
 });
 
 app.get('/api/Bayazitova/task2', requests,function(req, res) {
-    let ask = req.query.q;
+    let ask = req.query.string;
     res.send(func2.SecondOne(ask));
 });
 
 app.get('/api/Bayazitova/task3', requests, function(req, res) {
-    let ask = req.query.q;
+    let ask = req.query.string;
     res.send(func3.ThirdOne(ask));
 });
 
@@ -85,7 +85,7 @@ app.use(function (err, req, res, next) {
 
 
 function check_Auth (req, res, next) {         // обработка 403 как у Спартака с логированием в консоль
-    if (req.query.admin === 'true')
+    if (req.query.user === 'admin')
     {
         console.log('Request: '+req.query.q);
         next();
