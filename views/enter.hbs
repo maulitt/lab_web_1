@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Задача №{{number}}</title>
+    </head>
+    <body>
+    {{> menu}}
+    <form method="get" action="/api/Bayazitova/{{pathname}}">
+        <p><b>Кто вы?</b><br>
+            <label>
+                <input name="user" type="text" size="40">
+            </label>
+        </p>
+        <p><b>Введите строку для задачи:</b><br>
+            <label>
+                <input name="string" type="text" size="40">
+            </label>
+        </p>
+        <p><input type="submit" value="Send"></p>
+    </form>
+    {{> footer}}
+    </body>
+</html>
