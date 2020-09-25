@@ -11,14 +11,36 @@ const fs = require('fs');
 
 app.set('view engine', 'hbs');
 app.set('views', 'views');
+hbs.registerPartials(__dirname+'/views/partials')
 
-app.use('/', function (req, res) {
+
+app.get('/', function (req, res) {
     res.render('mainpage.hbs', {
         title: 'Главная страница приложения',
         name: 'Регины'
     })
 })
 
+app.get('/api/Bayazitova/first', function (req, res) {
+    res.render('enter.hbs', {
+        number: '1',
+        pathname: 'task1'
+    })
+})
+
+app.get('/api/Bayazitova/second', function (req, res) {
+    res.render('enter.hbs', {
+        number: '2',
+        pathname: 'task2'
+    })
+})
+
+app.get('/api/Bayazitova/third', function (req, res) {
+    res.render('enter.hbs', {
+        number: '3',
+        pathname: 'task3'
+    })
+})
 
 app.get('/api/Bayazitova/task1', check_Auth,function(req, res) {
     let ask = req.query.q;
