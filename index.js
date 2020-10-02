@@ -1,19 +1,27 @@
 
 const express = require('express');
-//const hbs = require('hbs');
 const app = express();
 const hbs = require('hbs');
+const mongoose = require('mogoose');
+
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const fs = require('fs');
 
+//configure mngs's promise to global - if needed in mngs v.5?
+mongoose.promise = global.Promise;
+//connect to mongodb as Denis said
+let dbname = 'mydatabase';
+const uri = "mongodb+srv://maulit:<password>@cluster0.shosj.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
+
+//to use templates
 app.set('view engine', 'hbs');
 app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
 
-
+//всякие обработчики маршрутов
 app.get('/', function (req, res) {
     res.render('mainpage.hbs', {
         title: 'Главная страница приложения',
@@ -42,7 +50,7 @@ app.get('/api/Bayazitova/third', function (req, res) {
     })
 })
 
-app.get('/api/Bayazitova/task1', check_Auth,function(req, res) {
+app.get('/api/Bayazitova/task1', check_Auth, requests, function(req, res) {
     let ask = req.query.string;
     //res.send(func1.FirstOne(ask));
     res.render('output.hbs', {
@@ -67,6 +75,7 @@ app.get('/api/Bayazitova/task3', requests, function(req, res) {
     })
 });
 
+//мидлвари для ошибок
 app.use(function(req, res, next) {       // ошибка 404 обрабатывается по-особенному 0_о
     const err = new Error('Not Found');
     err.statusCode = 404;
@@ -115,11 +124,7 @@ function requests(req, res, next) {      // мидлваре для логиро
     next();
 }
 
-//function log_to_file(req, res, next) {
-//    let now = Date();
-//    fs.writeFileSync('logging.txt', 'Error '+ now);
-//    next();
-//}
+
 
 
 app.listen(3000, '127.0.0.1');
