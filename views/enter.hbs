@@ -6,9 +6,14 @@
     <body>
     {{> menu}}
     <form method="get" action="/api/Bayazitova/{{pathname}}">
-        <p><b>Кто вы?</b><br>
+        <p><b>Ваш логин</b><br>
             <label>
                 <input name="user" type="text" size="40">
+            </label>
+        </p>
+        <p><b>Пароль</b><br>
+            <label>
+                <input name="passwd" type="text" size="40">
             </label>
         </p>
         <p><b>Введите строку для задачи:</b><br>

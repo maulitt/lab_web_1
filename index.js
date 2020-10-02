@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const hbs = require('hbs');
-const mongoose = require('mogoose');
+const mongoose = require('mongoose');
 
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');

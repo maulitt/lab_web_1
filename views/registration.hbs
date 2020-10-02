@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Регистрация нового пользователя</title>
+</head>
+<body>
+{{> menu}}
+<form method="get" action="/api/Bayazitova/{{pathname}}">  //
+    <p><b>Ваш логин</b><br>
+        <label>
+            <input name="user" type="text" size="40">
+        </label>
+    </p>
+    <p><b>Пароль</b><br>
+        <label>
+            <input name="passwd" type="text" size="40">
+        </label>
+    </p>
+    <p><b>Почта</b><br>
+        <label>
+            <input name="email" type="text" size="40">
+        </label>
+    </p>
+    <p><input type="submit" value="Send"></p>
+</form>
+{{> footer}}
+</body>
+</html>
