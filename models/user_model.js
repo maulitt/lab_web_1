@@ -22,3 +22,27 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
+UserSchema.methods.setPasswd = function (passwd) {
+    this.hash = argon2.hash(passwd);
+}
+UserSchema.methods.checkPasswd = function(passwd) {
+    const hashy = argon2.hash(passwd);
+    return this.hash === hashy;
+}
+UserSchema.methods.createJWT = function() {
+    //to date or not to date - that is a question
+    return jwt.sign({
+        email: this.email,
+        id: this._id
+    }, 'secretkey');
+}
+
+UserSchema.methods.sendJSON = function () {
+    return {
+        _id: this._id,
+        email: this.email,
+        token: this.createJWT()
+    };
+}
+
+mongoose.model('users', UserSchema);
