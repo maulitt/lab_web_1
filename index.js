@@ -4,14 +4,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const mongoose = require('mongoose');
-const user = require('./models/user_model');
+const User = require('./models/user_model');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const auth = require('./routes_auth');
 const passport = require('./config/passport');
 const fs = require('fs');
-
+require('passport');
+require('passport-local');
 
 //connect to mongodb as Denis said
 //let dbname = 'mydatabase';
@@ -42,7 +43,53 @@ app.set('view engine', 'hbs');
 app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
 
+//регистрация новых людей
+app.post('/registration', auth.optional, (req, res, next) => {
+    if(!req.body.email) {
+        return res.status(422).json({
+            errors: {
+                email: 'is required'
+            }
+        });
+    }
+    if(!req.body.password) {
+        return res.status(422).json({
+            errors: { password: 'is required' }
+        });
+    }
+    const newUser = new User(req.body);
+    newUser.setPasswd(req.body.password);
+    return newUser.save()
+        .then(() => res.json({ user: newUser.sendJSON() }));
+})
 
+//сайн-ин старых людей
+app.post('/signin', auth.optional, (req, res, next) => {
+    const user = req.body;
+
+    if(!user.email) {
+        return res.status(422).json({
+            errors: {
+                email: 'is required',
+            }
+        });
+    }
+    if(!user.password) {
+        return res.status(422).json({
+            errors: {
+                password: 'is requierd'
+            }
+        });
+    }
+    return passport.authenticate('local', { session: false }, function(err, passportUser, info) {
+        if(err) { return next(err); }
+        if(passportUser) {
+            //const user = passportUser;
+            passportUser.token = passportUser.createJWT()
+            return res.json({ user: passportUser.sendJSON() });
+        }
+    })
+})
 
 //всякие обработчики маршрутов
 app.get('/', function (req, res) {
