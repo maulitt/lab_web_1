@@ -22,11 +22,11 @@ const UserSchema = new mongoose.Schema({
     //}
 });
 
-UserSchema.methods.setPasswd = function (passwd) {
-    this.password = argon2.hash(passwd);
+UserSchema.methods.setPasswd = async function (passwd) {
+    this.password = await argon2.hash(passwd);
 }
-UserSchema.methods.checkPasswd = function(passwd) {
-    const hashy = argon2.hash(passwd);
+UserSchema.methods.checkPasswd = async function (passwd) {
+    const hashy = await argon2.hash(passwd);
     return this.password === hashy;
 }
 UserSchema.methods.createJWT = function() {

@@ -68,8 +68,10 @@ app.post('/registration', auth.optional, (req, res, next) => {
     }
     const newUser = new User(req.body);
     newUser.setPasswd(req.body.password);
-    newUser.save();
-
+    newUser.save().then(() => {
+        let token = newUser.createJWT();
+        res.header('Authorization: Bearer '+ token).render('mainpage.hbs');
+    })
 })
 
 //сайн-ин старых людей
