@@ -34,7 +34,7 @@ UserSchema.methods.createJWT = function() {
     return jwt.sign({
         email: this.email,
         id: this._id
-    }, 'secretkey');
+    }, 'secret');
 }
 
 UserSchema.methods.sendJSON = function () {

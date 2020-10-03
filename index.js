@@ -1,19 +1,20 @@
 
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const mongoose = require('mongoose');
 const user = require('./models/user_model');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
-const auth_routes = require('./routes_auth');
+const auth = require('./routes_auth');
 const passport = require('./config/passport');
 const fs = require('fs');
 
 
 //connect to mongodb as Denis said
-let dbname = 'mydatabase';
+//let dbname = 'mydatabase';
 const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/mydatabase?retryWrites=true&w=majority";
 
 mongoose
@@ -31,10 +32,17 @@ mongoose.connection.on('error', err => {
     console.log('Error while running: ' + err.message);
 })
 
+//чтобы писать пост-реквесты нужны следующие мидлвари
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));  //для статических файлов хтмл
+
 //to use templates
 app.set('view engine', 'hbs');
 app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
+
+
 
 //всякие обработчики маршрутов
 app.get('/', function (req, res) {
