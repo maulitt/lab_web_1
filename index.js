@@ -1,10 +1,11 @@
-
+const User = require('./models/user_model').User;  //один
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const mongoose = require('mongoose');
-const User = require('./models/user_model');
+
+//const user = mongoose.model('user', User);  //два
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
@@ -29,19 +30,27 @@ mongoose
     })
     .catch((err) => console.log(err.message + 'Not connected for some reasons('))
 
+
 mongoose.connection.on('error', err => {
     console.log('Error while running: ' + err.message);
 })
 
+
 //чтобы писать пост-реквесты нужны следующие мидлвари
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));  //для статических файлов хтмл
+//app.use(express.static(path.join(__dirname, 'public')));  //для статических файлов хтмл
 
 //to use templates
 app.set('view engine', 'hbs');
 app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
+
+
+//регистрация
+app.get('/registration', function (req, res) {
+    res.render('registration.hbs');
+})
 
 //регистрация новых людей
 app.post('/registration', auth.optional, (req, res, next) => {
@@ -59,22 +68,22 @@ app.post('/registration', auth.optional, (req, res, next) => {
     }
     const newUser = new User(req.body);
     newUser.setPasswd(req.body.password);
-    return newUser.save()
-        .then(() => res.json({ user: newUser.sendJSON() }));
+    newUser.save();
+
 })
 
 //сайн-ин старых людей
 app.post('/signin', auth.optional, (req, res, next) => {
-    const user = req.body;
+    //const user = req.body;
 
-    if(!user.email) {
+    if(!req.body.email) {
         return res.status(422).json({
             errors: {
                 email: 'is required',
             }
         });
     }
-    if(!user.password) {
+    if(!req.body.password) {
         return res.status(422).json({
             errors: {
                 password: 'is requierd'
@@ -84,12 +93,14 @@ app.post('/signin', auth.optional, (req, res, next) => {
     return passport.authenticate('local', { session: false }, function(err, passportUser, info) {
         if(err) { return next(err); }
         if(passportUser) {
-            //const user = passportUser;
             passportUser.token = passportUser.createJWT()
             return res.json({ user: passportUser.sendJSON() });
         }
-    })
-})
+        return res.status(400).info;
+    })(req, res, next);
+});
+
+
 
 //всякие обработчики маршрутов
 app.get('/', function (req, res) {

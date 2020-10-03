@@ -17,17 +17,17 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    hash: {
-        type: String
-    }
+    //hash: {
+    //    type: String
+    //}
 });
 
 UserSchema.methods.setPasswd = function (passwd) {
-    this.hash = argon2.hash(passwd);
+    this.password = argon2.hash(passwd);
 }
 UserSchema.methods.checkPasswd = function(passwd) {
     const hashy = argon2.hash(passwd);
-    return this.hash === hashy;
+    return this.password === hashy;
 }
 UserSchema.methods.createJWT = function() {
     //to date or not to date - that is a question
@@ -46,4 +46,4 @@ UserSchema.methods.sendJSON = function () {
 }
 
 const User = mongoose.model('User', UserSchema);
-exports.User = User;
+module.exports.User = User;

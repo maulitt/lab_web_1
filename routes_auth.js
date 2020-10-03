@@ -15,11 +15,13 @@ const TokenFromHeader = function(req) {
 const auth = {
     required: jwt({
         secret: 'secret',
+        algorithms: ['HS256'],
         userProperty: 'payload',
         getToken: TokenFromHeader  //из документации express-jwt
     }),
     optional: jwt({ //для регистрации новых
         secret: 'secret',
+        algorithms: ['HS256'],
         userProperty: 'payload',
         getToken: TokenFromHeader,
         credentialsRequired: false
