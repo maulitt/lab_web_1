@@ -3,11 +3,12 @@ const express = require('express');
 const app = express();
 const hbs = require('hbs');
 const mongoose = require('mongoose');
-require('./models/user_model');
+const user = require('./models/user_model');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const auth_routes = require('./routes_auth');
+const passport = require('./config/passport');
 const fs = require('fs');
 
 
