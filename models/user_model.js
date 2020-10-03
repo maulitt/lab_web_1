@@ -45,4 +45,5 @@ UserSchema.methods.sendJSON = function () {
     };
 }
 
-mongoose.model('users', UserSchema);
+const user = mongoose.model('user', UserSchema);
+exports.user = user;

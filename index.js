@@ -3,18 +3,32 @@ const express = require('express');
 const app = express();
 const hbs = require('hbs');
 const mongoose = require('mongoose');
-
+require('./models/user_model');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
+const auth_routes = require('./routes_auth');
 const fs = require('fs');
 
-//configure mngs's promise to global - if needed in mngs v.5?
-mongoose.promise = global.Promise;
+
 //connect to mongodb as Denis said
 let dbname = 'mydatabase';
-const uri = "mongodb+srv://maulit:<password>@cluster0.shosj.mongodb.net/<dbname>?retryWrites=true&w=majority";
+const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/mydatabase?retryWrites=true&w=majority";
 
+mongoose
+    .connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    })
+    .then(() => {
+        console.log('Mongo is connected!!!!')
+    })
+    .catch((err) => console.log(err.message + 'Not connected for some reasons('))
+
+mongoose.connection.on('error', err => {
+    console.log('Error while running: ' + err.message);
+})
 
 //to use templates
 app.set('view engine', 'hbs');
