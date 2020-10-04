@@ -83,9 +83,9 @@ app.post('/signin', async (req, res, next) => {
     if(!mbuser) { res.status(400).send('Seems like you\'re not registered' ) }
     passport.authenticate('jwt', { session: false }, function(req, res, next) {
         if(!req.body.email || !req.body.password) { return next(res.status(400)); }
-        else {
-            res.redirect('/api/Bayazitova/first');
-        }
+
+        res.redirect('/');
+
     });
 });
 
