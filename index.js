@@ -10,9 +10,9 @@ const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const auth = require('./routes_auth');
-const passport = require('./config/passport');
+const passport = require('./config/passport').passport;
 const fs = require('fs');
-require('passport');
+//require('passport');
 require('passport-local');
 
 //connect to mongodb as Denis said
@@ -51,6 +51,9 @@ hbs.registerPartials(__dirname+'/views/partials')
 app.get('/registration', function (req, res) {
     res.render('registration.hbs');
 })
+app.get('/signin', function (req, res) {
+    res.render('signin.hbs');
+})
 
 //регистрация новых людей
 app.post('/registration', auth.optional, (req, res, next) => {
@@ -67,39 +70,23 @@ app.post('/registration', auth.optional, (req, res, next) => {
         });
     }
     const newUser = new User(req.body);
-    newUser.setPasswd(req.body.password);
+    newUser.setPasswd(req.body.password).then(() => { console.log('passwd is set') });  //возможно, придётся убрать
     newUser.save().then(() => {
         let token = newUser.createJWT();
-        res.header('Authorization: Bearer '+ token).render('mainpage.hbs');
+        res.header('Authorization: Bearer '+ token).redirect('/');
     })
 })
 
 //сайн-ин старых людей
-app.post('/signin', auth.optional, (req, res, next) => {
-    //const user = req.body;
-
-    if(!req.body.email) {
-        return res.status(422).json({
-            errors: {
-                email: 'is required',
-            }
-        });
-    }
-    if(!req.body.password) {
-        return res.status(422).json({
-            errors: {
-                password: 'is requierd'
-            }
-        });
-    }
-    return passport.authenticate('local', { session: false }, function(err, passportUser, info) {
-        if(err) { return next(err); }
-        if(passportUser) {
-            passportUser.token = passportUser.createJWT()
-            return res.json({ user: passportUser.sendJSON() });
+app.post('/signin', async (req, res, next) => {
+    const mbuser = await User.findOne({ name: req.body.name });
+    if(!mbuser) { res.status(400).send('Seems like you\'re not registered' ) }
+    passport.authenticate('jwt', { session: false }, function(req, res, next) {
+        if(!req.body.email || !req.body.password) { return next(res.status(400)); }
+        else {
+            res.redirect('/api/Bayazitova/first');
         }
-        return res.status(400).info;
-    })(req, res, next);
+    });
 });
 
 
@@ -110,6 +97,10 @@ app.get('/', function (req, res) {
         title: 'Главная страница приложения',
         name: 'Регины'
     })
+})
+
+app.get('/tasks', function (req, res) {
+    res.render('')
 })
 
 app.get('/api/Bayazitova/first', function (req, res) {
