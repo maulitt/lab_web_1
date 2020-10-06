@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const mongoose = require('mongoose');
-
+const flash = require('connect-flash');
 //const user = mongoose.model('user', User);  //два
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
@@ -35,7 +35,7 @@ mongoose.connection.on('error', err => {
     console.log('Error while running: ' + err.message);
 })
 
-
+app.use(flash());
 //чтобы писать пост-реквесты нужны следующие мидлвари
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -46,7 +46,7 @@ app.set('view engine', 'hbs');
 app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
 
-
+app.use(passport.initialize());
 //регистрация
 app.get('/registration', function (req, res) {
     res.render('registration.hbs');
@@ -78,10 +78,8 @@ app.post('/registration', auth.optional, (req, res, next) => {
 })
 
 //сайн-ин старых людей
-app.post('/signin', async (req, res, next) => {
-    const mbuser = await User.findOne({ name: req.body.name });
-    if(!mbuser) { res.status(400).send('Seems like you\'re not registered' ) }
-    passport.authenticate('jwt', { session: false }, function(req, res, next) {
+app.post('/signin', (req, res, next) => {
+    passport.authenticate('JWT', { session: false, failureFlash: true }, function(req, res, next) {
         if(!req.body.email || !req.body.password) { return next(res.status(400)); }
 
         res.redirect('/');

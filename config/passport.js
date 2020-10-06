@@ -6,7 +6,7 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const User = mongoose.model('User');
 
 //просто из документации к паспорту
-passport.use(new LocalStrategy({
+passport.use('local',new LocalStrategy({
     usernameField: 'user[email]',
     passwordField: 'user[password]'
 }, function (email, password, done) {
@@ -22,9 +22,9 @@ passport.use(new LocalStrategy({
     });
 }));
 let opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('JWT');
 opts.secretOrKey = 'secret';
-passport.use('jwt', new JwtStrategy(opts, function(jwt_payload, done) {
+passport.use('JWT', new JwtStrategy(opts, function(jwt_payload, done) {
     User.findOne({id: jwt_payload.sub}, function(err, user) {
         if(err) { return done(err,false); }
         if (user) { return done(null, user); }
