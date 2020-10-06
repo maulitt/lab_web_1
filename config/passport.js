@@ -21,15 +21,5 @@ passport.use('local',new LocalStrategy({
         return done(null, user);
     });
 }));
-let opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('JWT');
-opts.secretOrKey = 'secret';
-passport.use('JWT', new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if(err) { return done(err,false); }
-        if (user) { return done(null, user); }
-        else { return done(null, false); }
-    })
-}))
 
 exports.passport = passport;

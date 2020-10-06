@@ -1,19 +1,20 @@
-const User = require('./models/user_model').User;  //один
+const User = require('./models/user_model').User;
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
-//const user = mongoose.model('user', User);  //два
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const auth = require('./routes_auth');
 const passport = require('./config/passport').passport;
 const fs = require('fs');
-//require('passport');
+const argon2 = require('argon2');
 require('passport-local');
+
+
 
 //connect to mongodb as Denis said
 //let dbname = 'mydatabase';
@@ -56,7 +57,7 @@ app.get('/signin', function (req, res) {
 })
 
 //регистрация новых людей
-app.post('/registration', auth.optional, (req, res, next) => {
+app.post('/registration', auth.optional, async (req, res, next) => {
     if(!req.body.email) {
         return res.status(422).json({
             errors: {
@@ -69,12 +70,16 @@ app.post('/registration', auth.optional, (req, res, next) => {
             errors: { password: 'is required' }
         });
     }
-    const newUser = new User(req.body);
-    newUser.setPasswd(req.body.password).then(() => { console.log('passwd is set') });  //возможно, придётся убрать
+    let passwd = await argon2.hash(req.body.password);
+    const newUser = new User({
+        email: req.body.email,
+        password: passwd,
+        name: req.body.name
+    });
+    //newUser.setPasswd(req.body.password).then(() => { console.log('passwd is set') });
     newUser.save().then(() => {
-        let token = newUser.createJWT();
-        res.header('Authorization: Bearer '+ token).redirect('/');
-    })
+        res.redirect('/');
+    });
 })
 
 //сайн-ин старых людей
@@ -146,6 +151,8 @@ app.get('/api/Bayazitova/task3', requests, function(req, res) {
         result: func3.ThirdOne(ask)
     })
 });
+
+
 
 //мидлвари для ошибок
 app.use(function(req, res, next) {       // ошибка 404 обрабатывается по-особенному 0_о
