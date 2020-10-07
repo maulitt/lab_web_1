@@ -1,8 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const JwtStrategy = require('passport-jwt').Strategy;
 const mongoose = require('mongoose');
-const ExtractJwt = require("passport-jwt").ExtractJwt;
 const User = mongoose.model('User');
 
 //просто из документации к паспорту

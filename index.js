@@ -8,7 +8,6 @@ const flash = require('connect-flash');
 const func1 = require('./task_1.js');
 const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
-const auth = require('./routes_auth');
 const passport = require('./config/passport').passport;
 const fs = require('fs');
 const argon2 = require('argon2');
@@ -57,7 +56,7 @@ app.get('/signin', function (req, res) {
 })
 
 //регистрация новых людей
-app.post('/registration', auth.optional, async (req, res, next) => {
+app.post('/registration', async (req, res, next) => {
     if(!req.body.email) {
         return res.status(422).json({
             errors: {
