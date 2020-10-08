@@ -1,14 +1,15 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const CookieStrategy = require('passport-cookie').Strategy;
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-//просто из документации к паспорту
+//для проверки старых пользователей (из документации)
 passport.use('local',new LocalStrategy({
-    usernameField: 'user[email]',
-    passwordField: 'user[password]'
+    usernameField: 'email',
+    passwordField: 'password'
 }, function (email, password, done) {
-    User.findOne({ email }, function (err, user) {
+    User.findOne({ email: email }, function (err, user) {
         if (err) { return done(err); }
         if(!user) {
             return done(null, false, {message: 'Incorrect username.'});
@@ -19,5 +20,18 @@ passport.use('local',new LocalStrategy({
         return done(null, user);
     });
 }));
+
+passport.use('cookie', new CookieStrategy({
+    cookieName: 'cookie',
+    signed: true,
+    passReqToCallback: true
+}, function(req, cookie, done) {
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if(err) { return done(err); }
+        if (!user) { return done(null, false); }
+        return done(null, user);
+    });
+}))
+
 
 exports.passport = passport;
