@@ -11,6 +11,8 @@ const func3 = require('./task_3.js');
 const passport = require('./config/passport').passport;
 const fs = require('fs');
 const argon2 = require('argon2');
+const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 require('passport-local');
 
 
@@ -36,6 +38,11 @@ mongoose.connection.on('error', err => {
 })
 
 app.use(flash());
+app.use(cookieSession({
+    name: 'session',
+    keys: ['key1', 'key2']
+}));
+app.use(cookieParser());
 //чтобы писать пост-реквесты нужны следующие мидлвари
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -127,7 +134,6 @@ app.get('/api/Bayazitova/third', function (req, res) {
 app.get('/api/Bayazitova/task1', passport.authenticate('cookie', { failureRedirect: '/signin',
     session: false, failureFlash: true }), requests, function(req, res) {
     let ask = req.query.string;
-    //res.send(func1.FirstOne(ask));
     res.render('output.hbs', {
         request: ask,
         result: func1.FirstOne(ask)
