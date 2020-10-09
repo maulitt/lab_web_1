@@ -69,6 +69,10 @@ app.post('/registration', async (req, res, next) => {
             errors: { password: 'is required' }
         });
     }
+    await User.findOne( { email: req.body.email }, (err, user) => {
+        if(err) { throw err; }
+        if(user) { return res.status(422).json({ message: 'Email is used by smn else.'}); }
+    });
     let passwd = await argon2.hash(req.body.password);
     const newUser = new User({
         email: req.body.email,
@@ -82,14 +86,8 @@ app.post('/registration', async (req, res, next) => {
 })
 
 //сайн-ин старых людей
-app.post('/signin', (req, res, next) => {
-    passport.authenticate('JWT', { session: false, failureFlash: true }, function(req, res, next) {
-        if(!req.body.email || !req.body.password) { return next(res.status(400)); }
-
-        res.redirect('/');
-
-    });
-});
+app.post('/signin', passport.authenticate('local', { successRedirect: '/api/Bayazitova/first', failureRedirect: '/signin',
+    session: false, failureFlash: true }))
 
 
 
@@ -126,7 +124,8 @@ app.get('/api/Bayazitova/third', function (req, res) {
     })
 })
 
-app.get('/api/Bayazitova/task1', check_Auth, requests, function(req, res) {
+app.get('/api/Bayazitova/task1', passport.authenticate('cookie', { failureRedirect: '/signin',
+    session: false, failureFlash: true }), requests, function(req, res) {
     let ask = req.query.string;
     //res.send(func1.FirstOne(ask));
     res.render('output.hbs', {

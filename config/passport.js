@@ -9,6 +9,7 @@ passport.use('local',new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
 }, function (email, password, done) {
+    console.log('proverka');
     User.findOne({ email: email }, function (err, user) {
         if (err) { return done(err); }
         if(!user) {
@@ -34,4 +35,4 @@ passport.use('cookie', new CookieStrategy({
 }))
 
 
-exports.passport = passport;
+module.exports.passport = passport;
