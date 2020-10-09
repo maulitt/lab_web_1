@@ -63,34 +63,8 @@ app.get('/signin', function (req, res) {
 })
 
 //регистрация новых людей
-app.post('/registration', async (req, res, next) => {
-    if(!req.body.email) {
-        return res.status(422).json({
-            errors: {
-                email: 'is required'
-            }
-        });
-    }
-    if(!req.body.password) {
-        return res.status(422).json({
-            errors: { password: 'is required' }
-        });
-    }
-    await User.findOne( { email: req.body.email }, (err, user) => {
-        if(err) { throw err; }
-        if(user) { return res.status(422).json({ message: 'Email is used by smn else.'}); }
-    });
-    let passwd = await argon2.hash(req.body.password);
-    const newUser = new User({
-        email: req.body.email,
-        password: passwd,
-        name: req.body.name
-    });
-    //newUser.setPasswd(req.body.password).then(() => { console.log('passwd is set') });
-    newUser.save().then(() => {
-        res.redirect('/');
-    });
-})
+app.post('/registration', passport.authenticate('registration', { succesRedirect: '/', failureRedirect: '/registration',
+session: false, failureFlash: true }))
 
 //сайн-ин старых людей
 app.post('/signin', passport.authenticate('local', { successRedirect: '/api/Bayazitova/first', failureRedirect: '/signin',
