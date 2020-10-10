@@ -51,7 +51,6 @@ passport.use('registration', new LocalStrategy({
 
 passport.use('cookie', new CookieStrategy({
     cookieName: 'session',
-    signed: true,
     passReqToCallback: true
 }, function(req, session, done) {
     console.log('it\'s cookie strategy');

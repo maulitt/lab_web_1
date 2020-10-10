@@ -15,8 +15,6 @@ const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
 require('passport-local');
 
-
-
 //connect to mongodb as Denis said
 
 const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/newDB?retryWrites=true&w=majority";
@@ -54,6 +52,7 @@ app.set('views', 'views');
 hbs.registerPartials(__dirname+'/views/partials')
 
 app.use(passport.initialize());
+app.use(passport.session());
 //регистрация
 app.get('/registration', function (req, res) {
     res.render('registration.hbs');
