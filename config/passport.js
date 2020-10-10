@@ -43,7 +43,7 @@ passport.use('registration', new LocalStrategy({
             email: email,
             password: password
         });
-        newUser.save();
+        newUser.save().then(() => { console.log('user\'s saved '); });
         return done(null, newUser);
     });
 }))
