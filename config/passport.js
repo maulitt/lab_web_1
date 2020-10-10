@@ -25,7 +25,7 @@ passport.use('local',new LocalStrategy({
 passport.use('registration', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
-}, async function(name, email, password, done) {
+}, function(name, email, password, done) {
     if(!email) {
         return done(null, false, {message: 'email is needed'});
     }
@@ -36,13 +36,15 @@ passport.use('registration', new LocalStrategy({
         if(err) { throw err; }
         if(user) { return done(null, false, { message: 'Email is used by smn else.'}); }
     });
-    let passwd = await argon2.hash(password);
-    const newUser = new User({
-        email: email,
-        password: passwd,
-        name: name
+    argon2.hash(password).then((password) => {
+        console.log('passwd is set');
+        const newUser = new User({
+            email: email,
+            password: password,
+            name: name
+        });
+        newUser.save();
     });
-    await newUser.save();
 }))
 
 
