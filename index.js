@@ -18,7 +18,7 @@ require('passport-local');
 
 
 //connect to mongodb as Denis said
-//let dbname = 'mydatabase';
+
 const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/mydatabase?retryWrites=true&w=majority";
 
 mongoose
@@ -60,16 +60,17 @@ app.get('/registration', function (req, res) {
 })
 app.get('/signin', function (req, res) {
     res.render('signin.hbs');
+    console.log(req.flash());
 })
 
 //регистрация новых людей
-app.post('/registration', passport.authenticate('registration', { succesRedirect: '/', failureRedirect: '/registration',
-session: false, failureFlash: true }))
+app.post('/registration', passport.authenticate('registration', { successRedirect: '/', failureRedirect: '/registration',
+failureFlash: true }))
+
 
 //сайн-ин старых людей
 app.post('/signin', passport.authenticate('local', { successRedirect: '/api/Bayazitova/first', failureRedirect: '/signin',
-    session: false, failureFlash: true }))
-
+    failureFlash: true }))
 
 
 //всякие обработчики маршрутов
@@ -106,7 +107,7 @@ app.get('/api/Bayazitova/third', function (req, res) {
 })
 
 app.get('/api/Bayazitova/task1', passport.authenticate('cookie', { failureRedirect: '/signin',
-    session: false, failureFlash: true }), requests, function(req, res) {
+    failureFlash: true }), requests, function(req, res) {
     let ask = req.query.string;
     res.render('output.hbs', {
         request: ask,

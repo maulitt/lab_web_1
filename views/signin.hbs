@@ -6,19 +6,14 @@
 <body>
 {{> menu}}
 <form method="post" action="/signin">  //
-    <p><b>Ваш логин</b><br>
+    <p><b>Ваш логин (e-mail)</b><br>
         <label>
-            <input name="name" type="text" size="40">
+            <input name="email" type="text" size="40">
         </label>
     </p>
     <p><b>Пароль</b><br>
         <label>
             <input name="password" type="text" size="40">
-        </label>
-    </p>
-    <p><b>Почта</b><br>
-        <label>
-            <input name="email" type="text" size="40">
         </label>
     </p>
     <p><input type="submit" value="Send"></p>

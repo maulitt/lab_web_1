@@ -25,7 +25,7 @@ passport.use('local',new LocalStrategy({
 passport.use('registration', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
-}, function(name, email, password, done) {
+}, function(email, password, done) {
     if(!email) {
         return done(null, false, {message: 'email is needed'});
     }
@@ -36,23 +36,26 @@ passport.use('registration', new LocalStrategy({
         if(err) { throw err; }
         if(user) { return done(null, false, { message: 'Email is used by smn else.'}); }
     });
+    console.log(typeof password);
     argon2.hash(password).then((password) => {
         console.log('passwd is set');
         const newUser = new User({
             email: email,
-            password: password,
-            name: name
+            password: password
         });
         newUser.save();
+        return done(null, newUser);
     });
 }))
 
 
 passport.use('cookie', new CookieStrategy({
-    cookieName: 'cookie',
+    cookieName: 'session',
     signed: true,
     passReqToCallback: true
-}, function(req, cookie, done) {
+}, function(req, session, done) {
+    console.log('it\'s cookie strategy');
+    console.log(req.user.email + ' ' + req.user.password);
     User.findOne({ email: req.user.email }, (err, user) => {
         if(err) { return done(err); }
         if (!user) { return done(null, false); }
@@ -63,8 +66,8 @@ passport.use('cookie', new CookieStrategy({
 passport.serializeUser((user, done) => {
     done(null, user._id);
 })
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
+passport.deserializeUser((_id, done) => {
+    User.findById(_id, (err, user) => {
         done(null,user);
     });
 })
