@@ -2,7 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const CookieStrategy = require('passport-cookie').Strategy;
 const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const User = require('../models/user_model').User;
 const argon2 = require('argon2');
 
 //для проверки старых пользователей (из документации)

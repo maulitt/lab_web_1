@@ -19,7 +19,7 @@ require('passport-local');
 
 //connect to mongodb as Denis said
 
-const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/mydatabase?retryWrites=true&w=majority";
+const uri = "mongodb+srv://maulit:edozub13@cluster0.shosj.mongodb.net/newDB?retryWrites=true&w=majority";
 
 mongoose
     .connect(uri, {
