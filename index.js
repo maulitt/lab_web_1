@@ -10,7 +10,7 @@ const func2 = require('./task_2.js');
 const func3 = require('./task_3.js');
 const passport = require('./config/passport').passport;
 const fs = require('fs');
-const argon2 = require('argon2');
+//const argon2 = require('argon2');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
 require('passport-local');
@@ -55,16 +55,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 //регистрация
 app.get('/registration', function (req, res) {
-    res.render('registration.hbs');
+    //const flesh = req.flash();
+    res.render('registration.hbs', { message: req.flash('error')});
 })
 app.get('/signin', function (req, res) {
     res.render('signin.hbs');
     console.log(req.flash());
 })
-
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+})
 //регистрация новых людей
-app.post('/registration', passport.authenticate('registration', { successRedirect: '/', failureRedirect: '/registration',
-failureFlash: true }))
+app.post('/registration', passport.authenticate('registration', { successRedirect: '/',
+    failureRedirect: '/registration', failureFlash: true }))
 
 
 //сайн-ин старых людей

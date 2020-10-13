@@ -5,7 +5,8 @@
 </head>
 <body>
 {{> menu}}
-<form method="post" action="/registration">  //
+<form method="post" action="/registration">
+    <p><b>{{message}}</b><br></p>
     <p><b>Ваш логин (e-mail)</b><br>
         <label>
             <input name="email" type="text" size="40">

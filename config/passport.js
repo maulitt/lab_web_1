@@ -33,18 +33,25 @@ passport.use('registration', new LocalStrategy({
         return done(null, false, {message: 'password is needed'});
     }
     User.findOne( { email: email }, (err, user) => {
-        if(err) { throw err; }
-        if(user) { return done(null, false, { message: 'Email is used by smn else.'}); }
-    });
-    console.log(typeof password);
-    argon2.hash(password).then((password) => {
-        console.log('passwd is set');
-        const newUser = new User({
-            email: email,
-            password: password
-        });
-        newUser.save().then(() => { console.log('user\'s saved '); });
-        return done(null, newUser);
+        if(err) {
+            throw err;
+        }
+        if(user) {
+            console.log('user is used');
+            return done(null, false, { message: 'Email is used by smn else.'});
+        }
+        else {
+            console.log(typeof password);
+            argon2.hash(password).then((password) => {
+                console.log('passwd is set');
+                const newUser = new User({
+                    email: email,
+                    password: password
+                });
+                newUser.save().then(() => { console.log('user\'s saved '); });
+                return done(null, newUser);
+                });
+        }
     });
 }))
 
@@ -54,7 +61,7 @@ passport.use('cookie', new CookieStrategy({
     passReqToCallback: true
 }, function(req, session, done) {
     console.log('it\'s cookie strategy');
-    console.log(req.user.email + ' ' + req.user.password);
+    //console.log(req.user.email + ' ' + req.user.password);
     User.findOne({ email: req.user.email }, (err, user) => {
         if(err) { return done(err); }
         if (!user) { return done(null, false); }
